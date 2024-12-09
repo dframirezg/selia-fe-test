@@ -1,46 +1,19 @@
-import { LitElement, css, html } from 'lit'
+import { LitElement, html } from 'lit'
+
+import { seliaDrawerStyles } from './SeliaDrawerStyles.js'
 
 class SeliaDrawer extends LitElement {
+  static styles = [seliaDrawerStyles]
   static properties = {
     isOpen: {
       type: Boolean,
+      default: true,
       reflect: true,
     },
-    sections: {
+    menuItems: {
       type: Array,
     },
   }
-
-  static styles = css`
-    :host {
-      display: block;
-      width: var(--drawer-width, 250px);
-      background-color: white;
-      border-right: 1px solid #ccc;
-      transition: transform 0.3s ease;
-      transform: translateX(-100%);
-    }
-    :host([isOpen]) {
-      transform: translateX(0);
-    }
-    .drawer-header {
-      display: flex;
-      justify-content: space-between;
-      padding: 1rem;
-      border-bottom: 1px solid #ccc;
-    }
-    .drawer-content {
-      padding: 1rem;
-    }
-    .drawer-item {
-      padding: 0.5rem 1rem;
-      cursor: pointer;
-      transition: background-color 0.2s;
-    }
-    .drawer-item:hover {
-      background-color: #f0f0f0;
-    }
-  `
 
   constructor() {
     super()
@@ -50,44 +23,61 @@ class SeliaDrawer extends LitElement {
 
   toggleDrawer() {
     this.isOpen = !this.isOpen
-    const state = this.isOpen ? 'open' : 'closed'
     const url = new URL(window.location)
-    url.searchParams.set('drawer', state)
+    url.searchParams.set('drawer', this.open ? 'open' : 'closed')
     window.history.pushState({}, '', url)
   }
 
+  renderMenu() {
+    const sections = this.menuItems.reduce((acc, item) => {
+      if (!acc[item.section]) acc[item.section] = []
+      acc[item.section].push(item)
+      return acc
+    }, {})
+
+    return html`
+      ${Object.keys(sections).map(
+        (section) => html`
+          ${section !== 'main' ? html`<div class="section-header">${section}</div>` : ''}
+          ${sections[section].map(
+            (item) => html`
+              <a
+                href="#"
+                class="menu-item ${item.selected ? 'selected' : ''}"
+                @click="${() => this.handleItemClick(item)}"
+              >
+                <span class="menu-icon">${item.icon}</span>
+                <span>${item.label}</span>
+              </a>
+            `,
+          )}
+        `,
+      )}
+    `
+  }
+
   handleItemClick(item) {
-    this.dispatchEvent(
-      new CustomEvent('item-selected', {
-        detail: {
-          key: item.key,
-          label: item.label,
-        },
-      }),
+    this.menuItems = this.menuItems.map((menuItem) =>
+      menuItem.label === item.label
+        ? { ...menuItem, selected: true }
+        : { ...menuItem, selected: false },
     )
+    this.requestUpdate()
+    this.dispatchEvent(new CustomEvent('item-selected', { detail: { item } }))
   }
 
   render() {
     return html`
-      <div class="drawer-header">
-        <span>Drawer</span>
-        <button @click=${this.toggleDrawer}>${this.isOpen ? 'Close' : 'Open'}</button>
-      </div>
-      <div class="drawer-content">
-        ${this.sections.map(
-          (section) => html`
-            <div>
-              <h4>${section.title}</h4>
-              ${section.items.map(
-                (item) => html`
-                  <div class="drawer-item" @click=${() => this.handleItemClick(item)}>
-                    ${item.icon ? html`<span>${item.icon}</span>` : ''} ${item.label}
-                  </div>
-                `,
-              )}
-            </div>
-          `,
-        )}
+      <div>
+        <div class="menu-header">
+          <span class="menu-icon"></span>
+          <h1>Selia</h1>
+        </div>
+        <div class="content">${this.isOpen ? this.renderMenu() : ''}</div>
+        <button class="toggle-button" @click="${this.toggleDrawer}">
+          ${this.isOpen ? '←' : '→'}
+        </button>
+        <div class="footer">Selia v1.15</div>
       </div>
     `
   }
