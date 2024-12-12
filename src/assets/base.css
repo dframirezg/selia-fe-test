@@ -19,6 +19,14 @@
   --vt-c-text-light-2: rgba(60, 60, 60, 0.66);
   --vt-c-text-dark-1: var(--vt-c-white);
   --vt-c-text-dark-2: rgba(235, 235, 235, 0.64);
+  --selia-icon-size: 24px;
+  --selia-purple: #8350e6;
+  --selia-grey: #3e4047;
+  --selia-white: #ffffff;
+  --selia-button-bg: #f3eefc;
+  --selia-drawer-button: #eff1f5;
+  --w-100: 100%;
+  --selia-separator-color: #dde1e9;
 }
 
 /* semantic color variables for this project */

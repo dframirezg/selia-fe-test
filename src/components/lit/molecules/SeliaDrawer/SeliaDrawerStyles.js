@@ -17,21 +17,22 @@ export const seliaDrawerStyles = css`
   }
 
   :host([isOpen]) {
-    width: 260px; /* Expanded width */
+    width: 260px;
   }
 
   :host(:not([isOpen])) {
-    width: 88px; /* Collapsed width */
+    width: 88px;
   }
 
   .content {
     flex-grow: 1;
     display: flex;
     flex-direction: column;
-    padding: 8px;
   }
 
   .menu-header {
+    padding: 10px 32px;
+    border-bottom: 2px solid var(--selia-separator-color);
   }
 
   .menu-item {
@@ -71,10 +72,8 @@ export const seliaDrawerStyles = css`
   }
 
   :host([isOpen]) .toggle-button {
-    position: absolute;
-    bottom: 1rem;
-    width: 100%;
-    height: 40px;
+    width: 244px;
+    height: 48px;
     background: #f4f4f4;
     border: none;
     border-radius: 8px;
@@ -87,8 +86,12 @@ export const seliaDrawerStyles = css`
   }
 
   :host(:not([isOpen])) .toggle-button {
-    background-color: #f4f4f4; /* Example: light gray background */
-    color: black;
+    background-color: #f4f4f4;
+    width: 72px;
+    height: 48px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border: none;
   }
 
   .toggle-button:hover {
@@ -96,10 +99,20 @@ export const seliaDrawerStyles = css`
   }
 
   .footer {
-    padding: 2px;
+    position: absolute;
+    bottom: 8px;
+    margin: 0 8px;
     text-align: center;
     font-size: 0.8rem;
     color: #aaa;
+  }
+
+  :host(:not([isOpen])) .footer span {
+    display: none;
+  }
+
+  selia-menu-button:last-of-type {
+    border-bottom: 2px solid var(--selia-separator-color);
   }
 
   @media (max-width: 768px) {
