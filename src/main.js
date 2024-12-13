@@ -1,6 +1,6 @@
 import './assets/main.css'
 // Components definition
-import './components/lit/molecules/SeliaDrawer/SeliaDrawer'
+import './components/lit/molecules/SeliaDrawer/SeliaDrawer.js'
 
 import App from './App.vue'
 import { createApp } from 'vue'

@@ -3,6 +3,7 @@ import '../../molecules/SeliaExpandableMenuButton/SeliaExpandableMenuButton.js'
 
 import { LitElement, html } from 'lit'
 
+import packageJson from '../../../../../package.json'
 import { seliaDrawerStyles } from './SeliaDrawerStyles.js'
 
 class SeliaDrawer extends LitElement {
@@ -13,12 +14,22 @@ class SeliaDrawer extends LitElement {
     menuItems: { type: Array },
     header: { type: Object },
     toggleIcons: { type: Array },
+    seliaVersion: { type: String },
   }
 
   constructor() {
     super()
     this.isOpen = false
     this.menuItems = []
+    this.seliaVersion = packageJson.version
+  }
+
+  connectedCallback() {
+    super.connectedCallback()
+    document.addEventListener('click', this.handleDocumentClick.bind(this))
+    const url = new URL(window.location)
+    const drawerState = url.searchParams.get('drawer')
+    this.isOpen = drawerState === 'open'
   }
 
   toggleDrawer() {
@@ -70,19 +81,32 @@ class SeliaDrawer extends LitElement {
   }
 
   handleItemClick(item) {
-    this.menuItems = this.menuItems.map((menuItem) =>
-      menuItem.label === item.label
-        ? { ...menuItem, selected: true }
-        : { ...menuItem, selected: false },
-    )
+    console.log(item)
+
+    const updateSelection = (items, selectedItem) =>
+      items.map((menuItem) => {
+        if (menuItem.label === selectedItem.label) {
+          return { ...menuItem, selected: true }
+        }
+        if (menuItem.submenuItems) {
+          const updatedSubmenu = updateSelection(menuItem.submenuItems, selectedItem)
+
+          // Determine if any submenu item is selected
+          const isSubmenuSelected = updatedSubmenu.some((submenuItem) => submenuItem.selected)
+
+          return {
+            ...menuItem,
+            selected: isSubmenuSelected,
+            submenuItems: updatedSubmenu,
+          }
+        }
+        return { ...menuItem, selected: false }
+      })
+
+    this.menuItems = updateSelection(this.menuItems, item)
+    console.log('Updated Menu Items:', this.menuItems)
     this.requestUpdate()
     this.dispatchEvent(new CustomEvent('item-selected', { detail: { item } }))
-  }
-
-  // Add a global click event listener
-  connectedCallback() {
-    super.connectedCallback()
-    document.addEventListener('click', this.handleDocumentClick.bind(this))
   }
 
   // Remove the global click event listener
@@ -111,7 +135,7 @@ class SeliaDrawer extends LitElement {
         </div>
         <div class="content">${this.renderMenu(this.isOpen)}</div>
         <div class="footer">
-          <span>Selia v1.15</span>
+          <span>Selia v${this.seliaVersion}</span>
           <button class="toggle-button" @click="${this.toggleDrawer}">
             <img src=${this.isOpen ? this.toggleIcons[0] : this.toggleIcons[1]} />
           </button>

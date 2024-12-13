@@ -57,6 +57,7 @@ class SeliaExpandableMenuButton extends LitElement {
                 .icon="${item.icon}"
                 .label="${item.label}"
                 .size="${this.size}"
+                .selected="${item.selected}"
                 .active="${item.active}"
                 .isExpandable="${false}"
                 .hide_label="${this.hide_label}"

@@ -1,6 +1,6 @@
 <template>
-  <div class="search">
-    <h1>Search View</h1>
+  <div class="appointment">
+    <h1>Appointments page</h1>
   </div>
 </template>
 

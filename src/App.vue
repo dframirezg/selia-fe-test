@@ -37,11 +37,24 @@ export default {
       },
       toggleIcons: [arrowUpLeft, arrowDownRight],
       menuItems: [
-        { label: 'Home', icon: homeIcon, section: 'main', selected: true, active: true },
-        { label: 'Citas', icon: appointmentsIcon, section: 'main', active: true },
-        { label: 'Buscar', icon: searchIcon, section: 'main', active: true },
-        { label: 'Para ti', icon: smileIcon, section: 'main', active: true },
-        { label: 'Soporte', icon: supportIcon, section: 'main', active: true },
+        {
+          label: 'Home',
+          icon: homeIcon,
+          section: 'main',
+          selected: true,
+          active: true,
+          route: '/',
+        },
+        {
+          label: 'Citas',
+          icon: appointmentsIcon,
+          section: 'main',
+          active: true,
+          route: '/appointments',
+        },
+        { label: 'Buscar', icon: searchIcon, section: 'main', active: true, route: '/search' },
+        { label: 'Para ti', icon: smileIcon, section: 'main', active: true, route: '/for-you' },
+        { label: 'Soporte', icon: supportIcon, section: 'main', active: true, route: '/support' },
         {
           label: 'Cuenta',
           icons: [arrowDownIcon, arrowUpIcon],
@@ -52,6 +65,7 @@ export default {
               label: 'Perfil',
               icon: profileIcon,
               active: true,
+              route: '/profile',
             },
           ],
         },
@@ -65,11 +79,13 @@ export default {
               label: 'Cambiar contraseña',
               icon: eyeIcon,
               active: true,
+              route: '/change-password',
             },
             {
               label: 'Bloqueo de PIN',
               icon: lockIcon,
               active: false,
+              route: '/block-pin',
             },
           ],
         },
@@ -78,7 +94,11 @@ export default {
   },
   methods: {
     onItemSelected(event) {
-      console.log('Selected item:', event.detail)
+      //console.log('Selected item:', event.detail.item)
+      const { route } = event.detail.item
+      if (route) {
+        this.$router.push(route)
+      }
     },
   },
 }

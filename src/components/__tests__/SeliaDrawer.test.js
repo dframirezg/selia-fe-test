@@ -1,67 +1,88 @@
 import '../lit/molecules/SeliaDrawer/SeliaDrawer.js'
 
-import { expect, oneEvent } from '@open-wc/testing'
-
-// tests/components/SeliaDrawer.test.js
-import { mount } from '@vue/test-utils'
+import { expect, fixture, html, oneEvent } from '@open-wc/testing'
 
 describe('SeliaDrawer Component', () => {
-  let wrapper
+  let element
 
-  beforeEach(() => {
-    wrapper = mount({
-      template: `
-        <selia-drawer
-          :header="{ full_logo: 'full_logo.png', logo: 'logo.png', aria_label: 'Selia Logo' }"
-          :menuItems="[
-            { label: 'Home', icon: 'home.svg', section: 'main', selected: false },
-            {
-              label: 'Settings',
-              icons: ['settings_open.svg', 'settings_close.svg'],
-              section: 'main',
-              submenuItems: [
-                { label: 'Profile', icon: 'profile.svg' },
-                { label: 'Notifications', icon: 'notifications.svg' }
-              ]
-            }
-          ]"
-        />
-      `,
-    })
+  beforeEach(async () => {
+    element = await fixture(html`
+      <selia-drawer
+        .header="${{
+          full_logo: 'full-logo.png',
+          logo: 'logo.png',
+          aria_label: 'Selia Logo',
+        }}"
+        .menuItems="${[
+          { label: 'Home', icon: 'home.svg', section: 'main', selected: false, route: '/' },
+          {
+            label: 'Cuenta',
+            icons: ['arrow_down.svg', 'arrow_up.svg'],
+            section: 'main',
+            submenuItems: [
+              { label: 'Perfil', icon: 'profile.svg', selected: false, route: '/profile' },
+            ],
+          },
+        ]}"
+        .toggleIcons="${['arrow-left.svg', 'arrow-right.svg']}"
+      ></selia-drawer>
+    `)
   })
 
-  it('renders with default props', () => {
-    const drawer = wrapper.find('selia-drawer')
-    expect(drawer.exists()).toBe(true)
-    expect(drawer.vm.isOpen).toBe(false)
+  it('renders with default properties', () => {
+    expect(element.isOpen).to.equal(false)
+    expect(element.menuItems).to.have.length(2)
+    expect(element.seliaVersion).to.exist
   })
 
-  it('toggles drawer state', async () => {
-    const toggleButton = wrapper.find('.toggle-button')
-    await toggleButton.trigger('click')
-    expect(wrapper.vm.$refs.drawer.isOpen).toBe(true)
+  it('toggles drawer state when toggleDrawer is called', async () => {
+    expect(element.isOpen).to.equal(false)
+    element.toggleDrawer()
+    expect(element.isOpen).to.equal(true)
+    element.toggleDrawer()
+    expect(element.isOpen).to.equal(false)
   })
 
-  it('updates URL when toggling', async () => {
-    const initialUrl = new URL(window.location.href)
-    const toggleButton = wrapper.find('.toggle-button')
-    await toggleButton.trigger('click')
+  it('updates URL when toggling drawer', async () => {
+    element.toggleDrawer()
     const updatedUrl = new URL(window.location.href)
-    expect(updatedUrl.searchParams.get('drawer')).toBe('open')
-    await toggleButton.trigger('click')
+    expect(updatedUrl.searchParams.get('drawer')).to.equal('open')
+    element.toggleDrawer()
     const finalUrl = new URL(window.location.href)
-    expect(finalUrl.searchParams.get('drawer')).toBe('closed')
+    expect(finalUrl.searchParams.get('drawer')).to.equal('closed')
   })
 
-  it('emits item-selected event when menu item is clicked', async () => {
-    const menuItem = wrapper.find('selia-menu-button')
-    setTimeout(() => menuItem.trigger('click'))
-    const event = await oneEvent(wrapper.element, 'item-selected')
-    expect(event.detail.item.label).toBe('Home')
+  it('renders menu items correctly', async () => {
+    const menuButtons = element.shadowRoot.querySelectorAll('selia-menu-button')
+    expect(menuButtons).to.have.length(1) // "Item = Home"
+    const expandableMenuButtons = element.shadowRoot.querySelectorAll(
+      'selia-expandable-menu-button',
+    )
+    expect(expandableMenuButtons).to.have.length(1) // Item = "Cuenta"
   })
 
-  it('closes when clicked outside', async () => {
+  it('emits item-selected event when a menu item is clicked', async () => {
+    const menuItem = element.menuItems[0] // "Home"
+    const menuButton = element.shadowRoot.querySelector('selia-menu-button')
+    setTimeout(() => menuButton.click())
+    const event = await oneEvent(element, 'item-selected')
+    expect(event.detail.item).to.deep.equal(menuItem)
+  })
+
+  it('handles submenu item selection correctly', async () => {
+    const expandableMenuButton = element.shadowRoot.querySelector('selia-expandable-menu-button')
+    const submenuItem = element.menuItems[1].submenuItems[0] // "Perfil"
+    expandableMenuButton.dispatchEvent(
+      new CustomEvent('submenu-item-clicked', { detail: submenuItem }),
+    )
+    expect(element.menuItems[1].submenuItems[0].selected).to.equal(true) // "Perfil" should be selected
+    expect(element.menuItems[1].selected).to.equal(true) // Parent "Cuenta" should be selected
+  })
+
+  it('closes the drawer when clicking outside', async () => {
+    element.isOpen = true
     document.body.click()
-    expect(wrapper.vm.$refs.drawer.isOpen).toBe(false)
+    await element.updateComplete
+    expect(element.isOpen).to.equal(false)
   })
 })

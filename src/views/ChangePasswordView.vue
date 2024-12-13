@@ -1,6 +1,6 @@
 <template>
-  <div class="search">
-    <h1>Search View</h1>
+  <div class="change-password">
+    <h1>Change Password</h1>
   </div>
 </template>
 
