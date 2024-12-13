@@ -35,42 +35,6 @@ export const seliaDrawerStyles = css`
     border-bottom: 2px solid var(--selia-separator-color);
   }
 
-  .menu-item {
-    display: flex;
-    align-items: center;
-    padding: 0.5rem 1rem;
-    border-radius: 8px;
-    margin: 0.25rem 0;
-    cursor: pointer;
-    font-size: 16px;
-    line-height: 22px;
-    color: #3e4047;
-    text-decoration: none;
-    transition: background-color 0.3s ease;
-  }
-
-  .menu-item:hover {
-    background-color: #f3eefc;
-  }
-
-  .menu-item.selected {
-    background-color: #f3eefc;
-    color: #8350e6;
-  }
-
-  .menu-icon {
-    margin-right: 1rem;
-    font-size: 1.25rem;
-  }
-
-  .section-header {
-    font-weight: bold;
-    margin: 1rem 0 0.5rem;
-    color: #666;
-    text-transform: uppercase;
-    font-size: 0.85rem;
-  }
-
   :host([isOpen]) .toggle-button {
     width: 244px;
     height: 48px;
@@ -105,6 +69,11 @@ export const seliaDrawerStyles = css`
     text-align: center;
     font-size: 0.8rem;
     color: #aaa;
+  }
+
+  .footer span {
+    margin-bottom: 42px;
+    display: block;
   }
 
   :host(:not([isOpen])) .footer span {

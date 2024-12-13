@@ -11,7 +11,7 @@ class SeliaExpandableMenuButton extends LitElement {
   static properties = {
     label: { type: String },
     icons: { type: Array },
-    size: { type: Number },
+    size: { type: String, reflect: true },
     color: { type: String },
     expanded: { type: Boolean },
     submenuItems: { type: Array },
@@ -49,19 +49,15 @@ class SeliaExpandableMenuButton extends LitElement {
           .hide_label="${this.hide_label}"
           @click="${this.toggleExpand}"
         ></selia-menu-button>
-        <div
-          class="submenu"
-          style="display: ${this.expanded ? 'block' : 'none'}; padding-left: ${this.hide_label
-            ? '0'
-            : '16px'}"
-        >
+        <div class="submenu" style="display: ${this.expanded ? 'block' : 'none'};">
           ${this.submenuItems.map(
             (item) => html`
               <selia-menu-button
+                class="subitem"
                 .icon="${item.icon}"
                 .label="${item.label}"
-                .size="20"
-                .color="var(--selia-grey)"
+                .size="${this.size}"
+                .active="${item.active}"
                 .isExpandable="${false}"
                 .hide_label="${this.hide_label}"
                 @click="${() => this.handleSubmenuClick(item)}"

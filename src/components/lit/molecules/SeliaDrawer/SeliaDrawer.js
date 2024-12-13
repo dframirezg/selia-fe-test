@@ -12,6 +12,7 @@ class SeliaDrawer extends LitElement {
     isOpen: { type: Boolean, default: true, reflect: true },
     menuItems: { type: Array },
     header: { type: Object },
+    toggleIcons: { type: Array },
   }
 
   constructor() {
@@ -41,10 +42,10 @@ class SeliaDrawer extends LitElement {
             if (item.submenuItems) {
               return html`
                 <selia-expandable-menu-button
+                  style="border-bottom: 2px solid var(--selia-separator-color);"
                   .icons="${item.icons}"
                   .label="${item.label}"
-                  .size="24"
-                  .color="${item.selected ? 'var(--selia-purple)' : 'var(--selia-grey)'}"
+                  .size="${isOpen ? 'large' : 'small'}"
                   .submenuItems="${item.submenuItems}"
                   .hide_label="${!isOpen}"
                   @submenu-item-clicked="${(e) => this.handleItemClick(e.detail)}"
@@ -55,8 +56,7 @@ class SeliaDrawer extends LitElement {
                 <selia-menu-button
                   .icon="${item.icon}"
                   .label="${item.label}"
-                  .size="24"
-                  .color="${item.selected ? 'var(--selia-purple)' : 'var(--selia-grey)'}"
+                  .size="${isOpen ? 'large' : 'small'}"
                   .selected="${item.selected}"
                   .hide_label="${!isOpen}"
                   @click="${() => this.handleItemClick(item)}"
@@ -113,7 +113,7 @@ class SeliaDrawer extends LitElement {
         <div class="footer">
           <span>Selia v1.15</span>
           <button class="toggle-button" @click="${this.toggleDrawer}">
-            ${this.isOpen ? '←' : '→'}
+            <img src=${this.isOpen ? this.toggleIcons[0] : this.toggleIcons[1]} />
           </button>
         </div>
       </div>

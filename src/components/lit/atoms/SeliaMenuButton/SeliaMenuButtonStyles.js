@@ -3,11 +3,10 @@ import { css } from 'lit'
 export const seliaMenuButtonStyles = css`
   :host {
     display: block;
-    width: 100%;
+    width: inherit;
   }
 
   .menu-button {
-    width: var(--w-100);
     display: flex;
     align-items: center;
     justify-content: flex-start;
@@ -22,6 +21,16 @@ export const seliaMenuButtonStyles = css`
     border: none;
     background: #ffffff;
     line-height: 22px;
+    margin: 4px 8px;
+  }
+
+  .menu-button-lg {
+    width: var(--w-btn-lg);
+  }
+
+  .menu-button-sm {
+    width: var(--w-btn-sm);
+    padding: 16px 28px;
   }
 
   .menu-button .menu-label {
@@ -32,15 +41,26 @@ export const seliaMenuButtonStyles = css`
   }
 
   .menu-button.active {
-    color: var(--selia-purple);
+    color: var(--selia-dark-purple);
+    background-color: var(--selia-button-hover-bg);
   }
   .menu-button.active svg {
     fill: currentColor;
   }
 
   .menu-button:hover {
-    background-color: #e6d5ff;
-    border-color: #b08fdf;
+    background-color: var(--selia-button-hover-bg);
+    color: var(--selia-light-purple);
+  }
+
+  .menu-button.inactive {
+    color: var(--selia-grey);
+    cursor: not-allowed;
+    background-color: #dddddd;
+  }
+
+  .menu-button:hover svg {
+    fill: currentColor;
   }
 
   .icon-container {
@@ -53,7 +73,6 @@ export const seliaMenuButtonStyles = css`
 
   .menu-button.expandable {
     justify-content: space-between;
-    border-bottom: 2px solid var(--selia-separator-color);
   }
 
   .menu-button.expandable .icon-container {

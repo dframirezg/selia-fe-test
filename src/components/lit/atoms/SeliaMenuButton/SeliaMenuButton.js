@@ -9,12 +9,13 @@ class SeliaMenuButton extends LitElement {
   static properties = {
     icon: { type: String },
     label: { type: String },
-    size: { type: Number, reflect: true },
+    size: { type: String, reflect: true },
     color: { type: String },
     isExpandable: { type: Boolean },
     selected: { type: Boolean, reflect: true },
     hide_label: { type: Boolean, reflect: true },
     inlineSvg: { type: String },
+    active: { type: Boolean },
   }
 
   constructor() {
@@ -26,6 +27,7 @@ class SeliaMenuButton extends LitElement {
     this.selected = false
     this.hide_label = false
     this.isExpandable = false
+    this.active = true
   }
 
   updated(changedProperties) {
@@ -52,10 +54,10 @@ class SeliaMenuButton extends LitElement {
   render() {
     return html`
       <button
-        class="menu-button ${this.selected ? 'active' : ''} ${this.isExpandable
-          ? 'expandable'
-          : ''}"
-        style="color: ${this.color}"
+        class="menu-button ${this.selected ? 'active' : ''} ${this.isExpandable ? 'expandable' : ''} ${this.active ? '' : 'inactive'} ${this.size === 'large' ? 'menu-button-lg' : 'menu-button-sm'}"
+        ${this.active ? '' : 'disabled'}
+        "
+        part="menu-button"
       >
         <div class="icon-container" style="width: ${this.size}px; height: ${this.size}px;">
           <selia-icon size="${this.size}px" color="${this.color}">

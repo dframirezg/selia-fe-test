@@ -20,12 +20,15 @@
   --vt-c-text-dark-1: var(--vt-c-white);
   --vt-c-text-dark-2: rgba(235, 235, 235, 0.64);
   --selia-icon-size: 24px;
-  --selia-purple: #8350e6;
+  --selia-dark-purple: #47279b;
+  --selia-light-purple: #8350e6;
   --selia-grey: #3e4047;
   --selia-white: #ffffff;
-  --selia-button-bg: #f3eefc;
+  --selia-button-hover-bg: #f3eefc;
   --selia-drawer-button: #eff1f5;
   --w-100: 100%;
+  --w-btn-lg: 244px;
+  --w-btn-sm: 72px;
   --selia-separator-color: #dde1e9;
 }
 
